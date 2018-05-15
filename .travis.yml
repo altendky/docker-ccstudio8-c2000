@@ -1,0 +1,22 @@
+sudo: required
+
+language: python
+
+services:
+  - docker
+
+env:
+  global:
+    - MAJOR_VERSION=8
+    - IMAGE_NAME=ccstudio$MAJOR_VERSION-c2000
+    - BASE_IMAGE_NAME=altendky/ccstudio$MAJOR_VERSION
+
+jobs:
+  include:
+    - stage: Build
+      script:
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - travis_wait 30 docker build -t $IMAGE_NAME . --build-arg FROM="$BASE_IMAGE_NAME"
+      - docker run --rm -it $IMAGE_NAME ccstudio -noSplash -data /workspace -application com.ti.ccstudio.apps.projectImport -ccs.help
+      - docker tag $IMAGE_NAME $DOCKER_USERNAME/$IMAGE_NAME
+      - docker push $DOCKER_USERNAME/$IMAGE_NAME
