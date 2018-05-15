@@ -3,6 +3,7 @@ FROM $FROM
 
 ARG COMPILER_VERSION=6.4
 
+RUN apt-get install -y ubuntu-desktop
 RUN apt-get install -y python3
 
 COPY docker.py .
