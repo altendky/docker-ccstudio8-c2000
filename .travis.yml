@@ -16,7 +16,7 @@ jobs:
     - stage: Build
       script:
       - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      - travis_wait 30 docker build -t $IMAGE_NAME . --build-arg FROM="$BASE_IMAGE_NAME"
+      - travis_wait 60 docker build -t $IMAGE_NAME . --build-arg FROM="$BASE_IMAGE_NAME"
       - docker run --rm -it $IMAGE_NAME ccstudio -noSplash -data /workspace -application com.ti.ccstudio.apps.projectImport -ccs.help | grep -i usage
       - docker tag $IMAGE_NAME $DOCKER_USERNAME/$IMAGE_NAME
       - docker push $DOCKER_USERNAME/$IMAGE_NAME
